@@ -1,23 +1,57 @@
 import React, { useState, useEffect, useCallback } from "react";
 const Search = () => {
-  const pageLimit = 10;
-  const endP = `https://api.mixcloud.com/NTSRadio/cloudcasts/?limit=${pageLimit}`;
+  const resultLimit = 15;
+  //const [resultPage, setResultPage] = useState(1);
+  const [endP, setEndP] = useState(
+    `https://api.mixcloud.com/NTSRadio/cloudcasts/?limit=${resultLimit}`
+  );
   const [results, setResults] = useState(null);
   const [initialFetch, setInitialFetch] = useState(true);
   const fetchShows = useCallback(() => {
     fetch(endP)
       .then((e) => e.json())
-      .then((res) => setResults(res.data));
+      .then((res) => setResults(res));
   }, [endP]);
   useEffect(() => {
     fetchShows();
   }, [fetchShows]);
+
+  const browse = (e) => {
+    if (e.target.id === "nextPageBtn") {
+      setEndP(results.paging.next);
+      //setResultPage(resultPage + 1);
+    } else if (e.target.id === "previousPageBtn") {
+      setEndP(results.paging.previous);
+      //setResultPage(resultPage - 1);
+    }
+  };
   return (
     <>
-      <h1>Search for an NTS Show.</h1>
-      {initialFetch && <h1>Or Browse Recently Uploaded Shows:</h1>}
-      {results &&
-        results.map((result) => <h2 key={result.key}>{result.name}</h2>)}
+      <h1>Search for an NTS Show:</h1>
+      <form>
+        <input type="text"></input>
+        <button>Search</button>
+      </form>
+      {initialFetch && <h1>Or Browse All Recently Uploaded NTS Shows:</h1>}
+
+      {results && (
+        <div>
+          {results.data.map((result) => (
+            <h2 key={result.key}>{result.name}</h2>
+          ))}
+          {/* <p>Page: {resultPage}</p> //The pagination backwards doesnt work properly on Mixcloud API
+                   {resultPage > 1 && (
+            <button id="previousPageBtn" onClick={(e) => browse(e)}>
+              Previous page
+            </button>
+          )} */}
+          {results.paging.next && (
+            <button id="nextPageBtn" onClick={(e) => browse(e)}>
+              More
+            </button>
+          )}
+        </div>
+      )}
     </>
   );
 };
