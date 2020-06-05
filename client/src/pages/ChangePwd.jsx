@@ -19,13 +19,13 @@ const ResetPwd = () => {
     e.preventDefault();
 
     if (password === password2) {
-      fetch("http://localhost:9090/api/users/recovery", {
+      fetch("http://localhost:9090/api/v1/users/recovery", {
         method: "post",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        data: { id: userId, token, password },
+        body: JSON.stringify({ id: userId, token: token, password: password }),
       })
         .then((res) => {
           if (res.status === 200) {

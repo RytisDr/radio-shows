@@ -11,7 +11,7 @@ const Nav = ({ isAuth, logout }) => {
         <>
           <NavLink to="/my-shows">My Shows</NavLink>
           <NavLink to="/profile">Profile</NavLink>
-          <a onClick={() => logout()} href="#logout">
+          <a onClick={() => logout()} href="/">
             Logout
           </a>
         </>

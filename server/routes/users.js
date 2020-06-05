@@ -6,8 +6,10 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 // Origin
 const domain = require("../config/domain");
+//crypto for reset token
+const crypto = require("crypto");
 
-const sendMail = require(__dirname + "/../helpers/mail.js");
+const sendMail = require(__dirname + "/../helpers/mail");
 //#############################################
 /*
 GET 
@@ -113,6 +115,7 @@ router.post("/register", (req, res) => {
 //RESET PWD
 router.post("/reset-request", async (req, res) => {
   const { email } = req.body;
+
   try {
     const user = await User.query().findOne({ email }).throwIfNotFound();
     const recoveryToken = crypto.randomBytes(48).toString("hex");
@@ -126,9 +129,9 @@ router.post("/reset-request", async (req, res) => {
         response: "Email not sent",
       });
     }
-    res.status(200).send({ response: "Email succesfully sent" });
+    return res.status(200).send({ response: "Email succesfully sent" });
   } catch (err) {
-    res.status(err.statusCode).send({ response: "User not found" });
+    return res.status(err.statusCode).send({ response: "User not found" });
   }
 });
 router.post("/recovery", async (req, res) => {

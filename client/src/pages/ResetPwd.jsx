@@ -5,16 +5,20 @@ const ResetPassword = () => {
 
   function sendEmail(e) {
     e.preventDefault();
-    fetch("http://localhost:9090/api/users/reset-request", {
+    if (!email) {
+      return setResponse("Please provide a valid email address.");
+    }
+
+    fetch("http://localhost:9090/api/v1/users/reset-request", {
       method: "post",
       credentials: "include",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      data: {
-        email,
-      },
+      body: JSON.stringify({
+        email: email,
+      }),
     })
       .then((res) => {
         if (res.status === 200) {
@@ -22,6 +26,7 @@ const ResetPassword = () => {
         }
       })
       .catch((err) => {
+        console.log("error");
         setResponse("Error, check the email and try again");
       });
   }
