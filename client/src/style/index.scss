@@ -5,8 +5,26 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: black;
+  color: white;
 }
-
+.show {
+  border: white 1px solid;
+  :hover {
+    background-color: white;
+    color: black;
+  }
+  max-width: 300px;
+}
+button {
+  cursor: pointer;
+}
+.showLink {
+  cursor: pointer;
+  img {
+    max-width: 100%;
+  }
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

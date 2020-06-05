@@ -115,7 +115,6 @@ router.post("/register", (req, res) => {
 //RESET PWD
 router.post("/reset-request", async (req, res) => {
   const { email } = req.body;
-
   try {
     const user = await User.query().findOne({ email }).throwIfNotFound();
     const recoveryToken = crypto.randomBytes(48).toString("hex");

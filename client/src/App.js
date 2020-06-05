@@ -27,7 +27,11 @@ function App() {
           <Nav isAuth={isAuth} logout={toLogOut} />
         </header>
         <Switch>
-          <Route exact path="/" component={(props) => <Search />}></Route>
+          <Route
+            exact
+            path="/"
+            component={(props) => <Search isAuth={isAuth} />}
+          ></Route>
           <Route path="/signup" component={(props) => <Signup />}></Route>
           <Route path="/reset" component={(props) => <ResetPwd />}></Route>
           <Route path="/recovery" component={(props) => <ChangePwd />}></Route>
