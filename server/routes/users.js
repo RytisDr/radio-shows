@@ -1,10 +1,13 @@
 const router = require("express").Router();
-
+//User Model
+const User = require("../models/User");
 //bcrypt
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 // Origin
 const domain = require("../config/domain");
+
+const sendMail = require(__dirname + "/../helpers/mail.js");
 //#############################################
 /*
 GET 
@@ -21,7 +24,7 @@ router.get("/auth-check", async (req, res, next) => {
     if (!req.session.user) {
       throw res.status(403).send({ response: "Unauthenticated" });
     }
-    res.status(200).json({ response: "Authenticated" });
+    res.status(200).send({ response: "Authenticated" });
   } catch (err) {
     next();
   }
@@ -43,7 +46,6 @@ router.get("/logout", async (req, res, next) => {
 // LOGIN
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-
   if (email && password) {
     const users = await User.query().select().where({ email: email }).limit(1); //database query for user with the email specified, limit(1) stops the search after first match
     const user = users[0];
@@ -73,9 +75,9 @@ router.post("/register", (req, res) => {
   const { email, password } = req.body;
   if (email && password) {
     if (password.length < 8) {
-      return res.status(400).send({
-        response: "Password is too short. Must be at least 8 characters long.",
-      });
+      res.statusMessage =
+        "Password is too short. Must be at least 8 characters long.";
+      return res.status(400).send();
     } else {
       bcrypt.hash(password, saltRounds, async (error, hashedPassword) => {
         if (error) {
@@ -87,7 +89,8 @@ router.post("/register", (req, res) => {
             .where({ email: email })
             .limit(1);
           if (existingUser[0]) {
-            return res.status(400).send({ response: "User already exists" });
+            res.statusMessage = "User with this email already exists";
+            return res.status(400).send();
           } else {
             const newUser = await User.query().insert({
               email,
@@ -95,7 +98,7 @@ router.post("/register", (req, res) => {
             });
             return res
               .status(200)
-              .send({ response: "User created with email " + newUser.email });
+              .send({ response: "User created with email: " + newUser.email });
           }
         } catch (error) {
           return res.status(500).send({ response: "DB error" });
