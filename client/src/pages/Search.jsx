@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import saveShow from "../functions/saveShow";
 const Search = ({ isAuth }) => {
   const resultPageLimit = 10;
   const initialEndP = () => {
@@ -8,12 +9,20 @@ const Search = ({ isAuth }) => {
   const [resultsPage, setResultsPage] = useState(1);
   const [endP, setEndP] = useState(initialEndP());
   const [searchQuery, setSearchQuery] = useState(null);
+  const [searchError, setSearchError] = useState(null);
   const [results, setResults] = useState(null);
   const [initialFetch, setInitialFetch] = useState(true);
   const fetchShows = useCallback(() => {
     fetch(endP)
       .then((e) => e.json())
-      .then((res) => setResults(res));
+      .then((res) => {
+        if (res.data.length) {
+          setResults(res);
+        } else {
+          setSearchError("Nothing found with this query.");
+          setResults(null);
+        }
+      });
   }, [endP]);
   useEffect(() => {
     fetchShows();
@@ -37,7 +46,9 @@ const Search = ({ isAuth }) => {
     window.open(url);
     //implement a widget? https://www.mixcloud.com/developers/widget/
   };
-  const saveAShow = () => {};
+  const saveAShow = (show) => {
+    saveShow(show);
+  };
   return (
     <>
       <h1>Search for a Show:</h1>
@@ -61,7 +72,7 @@ const Search = ({ isAuth }) => {
         </button>
       )}
 
-      {results && (
+      {results ? (
         <div>
           {results.data.map((show) => (
             <div key={show.key} className="show">
@@ -70,10 +81,13 @@ const Search = ({ isAuth }) => {
                 <h2>{show.name}</h2>
               </div>
               {/* change to isAuth later */}
-              {!isAuth && <button>Favorite</button>}{" "}
+              {!isAuth && (
+                <button onClick={() => saveAShow(show)}>Favorite</button>
+              )}
             </div>
           ))}
           <p>Page: {resultsPage}</p>
+
           {resultsPage > 1 && (
             <button id="previousPageBtn" onClick={(e) => browse(e)}>
               Previous page
@@ -85,6 +99,8 @@ const Search = ({ isAuth }) => {
             </button>
           )}
         </div>
+      ) : (
+        <h2>{searchError}</h2>
       )}
     </>
   );

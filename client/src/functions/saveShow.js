@@ -1,1 +1,3 @@
-export default saveShow = (show) => {};
+export default function saveShow(show) {
+  console.log(show);
+}
