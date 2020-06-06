@@ -22,14 +22,15 @@ const Search = ({ isAuth }) => {
           if (!initialFetch) {
             let result = { paging: {}, data: [] };
             result.paging = res.paging;
-            res.data.map((show) => {
-              show.tags.map((tag) => {
+            res.data.forEach((show) => {
+              show.tags.forEach((tag) => {
                 if (tag.name === "NTS") {
+                  console.log(tag);
                   result.data.push(show);
                 }
               });
             });
-            JSON.stringify(result);
+            JSON.stringify(result); //improvement needed for empty result pages
             setResults(result);
           } else {
             setResults(res);
@@ -39,7 +40,7 @@ const Search = ({ isAuth }) => {
           setResults(null);
         }
       });
-  }, [endP]);
+  }, [endP, initialFetch]);
   useEffect(() => {
     fetchShows();
   }, [fetchShows]);
@@ -73,7 +74,7 @@ const Search = ({ isAuth }) => {
   };
   return (
     <>
-      <h1>Search for a Show:</h1>
+      <h1>Search for an NTS Show:</h1>
       <form>
         <input
           type="text"
@@ -103,8 +104,7 @@ const Search = ({ isAuth }) => {
                 <img src={show.pictures.large} alt="" />
                 <h2>{show.name}</h2>
               </div>
-              {/* change to isAuth later */}
-              {!isAuth && (
+              {isAuth && (
                 <button onClick={(e) => saveAShow(show, e.target)}>
                   Favorite
                 </button>

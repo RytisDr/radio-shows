@@ -3,7 +3,8 @@ exports.up = function (knex) {
     .createTable("shows", (table) => {
       table.increments("id");
       table.string("title").notNullable();
-      table.string("url").notNullable();
+      //table.string("tags").notNullable(); may need to take tags out to another table
+      table.string("endpoint").notNullable();
       table.date("date_released").notNullable();
     })
     .createTable("users", (table) => {
@@ -27,7 +28,7 @@ exports.up = function (knex) {
         .inTable("shows")
         .onDelete("cascade")
         .onUpdate("cascade");
-      table.date("date_added").notNullable();
+      table.dateTime("date_added").defaultTo(knex.fn.now()).notNullable();
     });
 };
 
