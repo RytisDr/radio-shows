@@ -5,12 +5,12 @@ const Search = ({ isAuth }) => {
   const initialEndP = () => {
     return `https://api.mixcloud.com/NTSRadio/cloudcasts/?limit=${resultPageLimit}&offset=0`; //Offset allows to browse by result pagination.
   };
-
   const [resultsPage, setResultsPage] = useState(1);
   const [endP, setEndP] = useState(initialEndP());
   const [searchQuery, setSearchQuery] = useState(null);
   const [emptyQueryErr, setEmptyQueryErr] = useState(null);
   const [searchError, setSearchError] = useState(null);
+  const [showSaved, setShowSaved] = useState(false);
   const [results, setResults] = useState(null);
   const [initialFetch, setInitialFetch] = useState(true);
   const fetchShows = useCallback(() => {
@@ -52,8 +52,10 @@ const Search = ({ isAuth }) => {
     window.open(url);
     //implement a widget? https://www.mixcloud.com/developers/widget/
   };
-  const saveAShow = (show) => {
-    saveShow(show);
+  const saveAShow = (show, button) => {
+    console.log(show);
+    saveShow(show, setShowSaved);
+    button.remove();
   };
   return (
     <>
@@ -89,7 +91,12 @@ const Search = ({ isAuth }) => {
               </div>
               {/* change to isAuth later */}
               {!isAuth && (
-                <button onClick={() => saveAShow(show)}>Favorite</button>
+                <button onClick={(e) => saveAShow(show, e.target)}>
+                  Favorite
+                </button>
+              )}
+              {showSaved && show.key === showSaved.key && (
+                <p id="saved">Saved!</p>
               )}
             </div>
           ))}

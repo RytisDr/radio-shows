@@ -1,3 +1,21 @@
-export default function saveShow(show) {
-  console.log(show);
+export default function saveShow(show, setShowSaved) {
+  if (show) {
+    fetch("http://localhost:9090/api/v1/shows/add", {
+      method: "post",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ show }),
+    }).then((res) => {
+      if (res.status === 200) {
+        setShowSaved(show);
+      } else {
+        console.log(res);
+      }
+    });
+  } else {
+    return false;
+  }
 }
