@@ -9,6 +9,7 @@ const Search = ({ isAuth }) => {
   const [resultsPage, setResultsPage] = useState(1);
   const [endP, setEndP] = useState(initialEndP());
   const [searchQuery, setSearchQuery] = useState(null);
+  const [emptyQueryErr, setEmptyQueryErr] = useState(null);
   const [searchError, setSearchError] = useState(null);
   const [results, setResults] = useState(null);
   const [initialFetch, setInitialFetch] = useState(true);
@@ -29,9 +30,14 @@ const Search = ({ isAuth }) => {
   }, [fetchShows]);
   const search = (e) => {
     e.preventDefault();
-    const searchEndP = `https://api.mixcloud.com/search/?q=NTSRadio&q=${searchQuery}&type=cloudcast&limit=${resultPageLimit}`;
-    setInitialFetch(false);
-    setEndP(searchEndP);
+    if (!searchQuery) {
+      setEmptyQueryErr("Input something!");
+    } else {
+      setEmptyQueryErr(null);
+      const searchEndP = `https://api.mixcloud.com/search/?q=NTSRadio&q=${searchQuery}&type=cloudcast&limit=${resultPageLimit}`;
+      setInitialFetch(false);
+      setEndP(searchEndP);
+    }
   };
   const browse = (e) => {
     if (e.target.id === "nextPageBtn") {
@@ -58,6 +64,7 @@ const Search = ({ isAuth }) => {
           onChange={(e) => setSearchQuery(e.target.value)}
         ></input>
         <button onClick={(e) => search(e)}>Search</button>
+        {emptyQueryErr && <h3>{emptyQueryErr}</h3>}
       </form>
       {initialFetch ? (
         <h1>Browse Most Recently Uploaded NTS Shows:</h1>
