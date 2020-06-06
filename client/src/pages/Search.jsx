@@ -18,7 +18,22 @@ const Search = ({ isAuth }) => {
       .then((e) => e.json())
       .then((res) => {
         if (res.data.length) {
-          setResults(res);
+          //The Mixcloud API limitations force me to do this; not possible to search through Accounts uploads, just all uploads.
+          if (!initialFetch) {
+            let result = { paging: {}, data: [] };
+            result.paging = res.paging;
+            res.data.map((show) => {
+              show.tags.map((tag) => {
+                if (tag.name === "NTS") {
+                  result.data.push(show);
+                }
+              });
+            });
+            JSON.stringify(result);
+            setResults(result);
+          } else {
+            setResults(res);
+          }
         } else {
           setSearchError("Nothing found with this query.");
           setResults(null);
@@ -53,7 +68,6 @@ const Search = ({ isAuth }) => {
     //implement a widget? https://www.mixcloud.com/developers/widget/
   };
   const saveAShow = (show, button) => {
-    console.log(show);
     saveShow(show, setShowSaved);
     button.remove();
   };
