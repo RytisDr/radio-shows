@@ -22,6 +22,7 @@ router.get("/get", isAuthenticated, async (req, res) => {
 });
 /////////////////////////////////////////////////////////////////////////////////
 router.post("/add", isAuthenticated, async (req, res) => {
+  const userId = req.session.user.id;
   if (req.body) {
     const { name, tags, user, key, updated_time } = req.body.show;
     if (name && tags && user && key && updated_time) {
@@ -33,19 +34,32 @@ router.post("/add", isAuthenticated, async (req, res) => {
         date_released: updated_time,
       };
       try {
-        await Shows.query()
-          .insert(show)
-          .then((show) => {
-            return UserShows.query().insert({
-              user_id: req.session.user.id,
-              show_id: show.id,
+        const userShows = await User.query()
+          .findByIds(userId)
+          .withGraphFetched("shows");
+        const foundShows = userShows[0].shows;
+        let exists = false;
+        foundShows.forEach((elm) => {
+          if (elm.endpoint == endpoint) {
+            exists = true;
+          }
+        });
+        if (exists) {
+          return res.status(404).send({ response: "Already added" });
+        } else {
+          await Shows.query()
+            .insert(show)
+            .then((show) => {
+              return UserShows.query().insert({
+                user_id: req.session.user.id,
+                show_id: show.id,
+              });
             });
-          });
+          return res.status(200).send({ response: "Show Added" });
+        }
       } catch (error) {
         return res.status(404).send({ response: "DB error" });
       }
-
-      return res.status(200).send({ response: "Show Added" });
     } else {
       return res.status(404).send({ response: "Wrong data received" });
     }
