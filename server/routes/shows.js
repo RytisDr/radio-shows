@@ -1,16 +1,27 @@
 const router = require("express").Router();
-//For Knex transaction
-const knex = require("knex");
 //Authenticate middleware
 const { isAuthenticated } = require(__dirname + "/../helpers/auth.js");
 //Show model
 const Shows = require("../models/Shows");
+//User model
+const User = require("../models/User");
 //UserShows model
 const UserShows = require("../models/UserShows");
-router.get("/get", isAuthenticated, (req, res) => {
-  return res.status(200).send({ response: "My shows here" });
+/////////////////////////////////////////////////////////////////////////////////
+router.get("/get", isAuthenticated, async (req, res) => {
+  const userId = req.session.user.id;
+  const userShows = await User.query()
+    .findByIds(userId)
+    .withGraphFetched("shows");
+  const shows = userShows[0].shows;
+  if (shows.length) {
+    return res.status(200).send({ response: shows });
+  } else {
+    return res.status(404).send({ response: "No shows added yet." });
+  }
 });
-router.post("/add", isAuthenticated, (req, res) => {
+/////////////////////////////////////////////////////////////////////////////////
+router.post("/add", isAuthenticated, async (req, res) => {
   if (req.body) {
     const { name, tags, user, key, updated_time } = req.body.show;
     if (name && tags && user && key && updated_time) {
@@ -22,7 +33,7 @@ router.post("/add", isAuthenticated, (req, res) => {
         date_released: updated_time,
       };
       try {
-        const newFavoriteShow = Shows.query()
+        await Shows.query()
           .insert(show)
           .then((show) => {
             return UserShows.query().insert({
@@ -42,5 +53,6 @@ router.post("/add", isAuthenticated, (req, res) => {
     return res.status(404).send({ response: "No data received" });
   }
 });
+/////////////////////////////////////////////////////////////////////////////////
 router.delete("/remove", isAuthenticated, (req, res) => {});
 module.exports = router;

@@ -6,6 +6,7 @@ class UserShows extends Model {
   static get tableName() {
     return "user_shows";
   }
+
   static get relationMappings() {
     return {
       relation: Model.BelongsToOneRelation,
