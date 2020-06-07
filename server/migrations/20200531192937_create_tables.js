@@ -4,7 +4,8 @@ exports.up = function (knex) {
       table.increments("id");
       table.string("title").notNullable();
       //table.string("tags").notNullable(); may need to take tags out to another table
-      table.string("endpoint").notNullable();
+      table.string("api_endpoint").notNullable();
+      table.string("url").notNullable();
       table.date("date_released").notNullable();
     })
     .createTable("users", (table) => {

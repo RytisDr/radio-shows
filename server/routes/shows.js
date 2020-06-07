@@ -24,13 +24,15 @@ router.get("/get", isAuthenticated, async (req, res) => {
 router.post("/add", isAuthenticated, async (req, res) => {
   const userId = req.session.user.id;
   if (req.body) {
-    const { name, tags, user, key, updated_time } = req.body.show;
-    if (name && tags && user && key && updated_time) {
-      const endpoint = "https://api.mixcloud.com" + key;
+    const { name, tags, user, key, updated_time, url } = req.body.show;
+
+    if (name && tags && user && key && url && updated_time) {
+      const api_endpoint = "https://api.mixcloud.com" + key;
       const show = {
         title: name,
         //tags: tags,
-        endpoint: endpoint,
+        api_endpoint: api_endpoint,
+        url: url,
         date_released: updated_time,
       };
       try {
@@ -40,7 +42,7 @@ router.post("/add", isAuthenticated, async (req, res) => {
         const foundShows = userShows[0].shows;
         let exists = false;
         foundShows.forEach((elm) => {
-          if (elm.endpoint == endpoint) {
+          if (elm.api_endpoint == api_endpoint) {
             exists = true;
           }
         });
@@ -58,7 +60,8 @@ router.post("/add", isAuthenticated, async (req, res) => {
           return res.status(200).send({ response: "Show Added" });
         }
       } catch (error) {
-        return res.status(404).send({ response: "DB error" });
+        console.log(error);
+        //return res.status(404).send({ response: "DB error" });
       }
     } else {
       return res.status(404).send({ response: "Wrong data received" });

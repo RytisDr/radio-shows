@@ -10,7 +10,6 @@ export default function saveShow(show, setShowSaved) {
       body: JSON.stringify({ show }),
     }).then((res) => {
       if (res.status === 200) {
-        console.log(res.response);
         setShowSaved(show);
       } else {
         setShowSaved(false);
