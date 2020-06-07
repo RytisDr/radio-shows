@@ -9,9 +9,11 @@ export default function authenticate(setIsAuth) {
     .then((response) => {
       if (response.status === 200) {
         setIsAuth(true);
+      } else {
+        setIsAuth(false);
       }
     })
     .catch((err) => {
-      setIsAuth(false);
+      console.log(err);
     });
 }

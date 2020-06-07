@@ -17,7 +17,7 @@ router.get("/get", isAuthenticated, async (req, res) => {
   if (shows.length) {
     return res.status(200).send({ response: shows });
   } else {
-    return res.status(404).send({ response: "No shows added yet." });
+    return res.status(404).send({ error: "No shows added yet." });
   }
 });
 /////////////////////////////////////////////////////////////////////////////////
@@ -48,28 +48,44 @@ router.post("/add", isAuthenticated, async (req, res) => {
         });
         if (exists) {
           return res.status(404).send({ response: "Already added" });
-        } else {
-          await Shows.query()
-            .insert(show)
-            .then((show) => {
-              return UserShows.query().insert({
-                user_id: req.session.user.id,
-                show_id: show.id,
-              });
-            });
-          return res.status(200).send({ response: "Show Added" });
         }
+        await Shows.query()
+          .insert(show)
+          .then((show) => {
+            return UserShows.query().insert({
+              user_id: req.session.user.id,
+              show_id: show.id,
+            });
+          });
+        return res.status(200).send({ response: "Show Added" });
       } catch (error) {
         console.log(error);
-        //return res.status(404).send({ response: "DB error" });
+        return res.status(404).send({ response: "DB error" });
       }
-    } else {
-      return res.status(404).send({ response: "Wrong data received" });
     }
-  } else {
-    return res.status(404).send({ response: "No data received" });
+    return res.status(404).send({ response: "Wrong data received" });
   }
+  return res.status(404).send({ response: "No data received" });
 });
 /////////////////////////////////////////////////////////////////////////////////
-router.delete("/remove", isAuthenticated, (req, res) => {});
+router.delete("/remove", isAuthenticated, async (req, res) => {
+  const userId = req.session.user.id;
+  if (req.body.id) {
+    const showId = req.body.id;
+    //const userShow = await UserShows.select().innerJoin()
+    try {
+      /* const show = await Shows.query().findById(showId).throwIfNotFound();
+      await show.$query().delete(); */
+      /*  const userShows = await UserShows.query()
+        .select("show_id")
+        .where("user_id", userId);
+      const match = await userShows.$query("show_id").where("show_id", showId); */
+      console.log(match);
+      return res.status(200).send({ response: "Removed" });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  return res.status(404).send({ response: "Wrong data" });
+});
 module.exports = router;
