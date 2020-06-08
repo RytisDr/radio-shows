@@ -72,15 +72,12 @@ router.delete("/remove", isAuthenticated, async (req, res) => {
   const userId = req.session.user.id;
   if (req.body.id) {
     const showId = req.body.id;
-    //const userShow = await UserShows.select().innerJoin()
+
     try {
-      /* const show = await Shows.query().findById(showId).throwIfNotFound();
-      await show.$query().delete(); */
-      /*  const userShows = await UserShows.query()
-        .select("show_id")
-        .where("user_id", userId);
-      const match = await userShows.$query("show_id").where("show_id", showId); */
-      console.log(match);
+      const showUser = await Shows.query()
+        .withGraphFetched("user")
+        .findById(showId);
+      console.log(showUser);
       return res.status(200).send({ response: "Removed" });
     } catch (error) {
       console.log(error);
