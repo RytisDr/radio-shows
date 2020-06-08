@@ -44,8 +44,9 @@ const Login = ({ isAuth, setIsAuth }) => {
   };
 
   return (
-    <div className="container">
-      <form method="POST">
+    <div className="formContainer">
+      <h1>Login</h1>
+      <form className="authForm" method="POST">
         <input
           type="email"
           required
@@ -58,7 +59,9 @@ const Login = ({ isAuth, setIsAuth }) => {
           defaultValue="password"
           onChange={(event) => setPassword(event.target.value)}
         ></input>
-        <button onClick={handleClick}>LOGIN</button>
+        <button className="formBtn" onClick={handleClick}>
+          LOGIN
+        </button>
       </form>
       <h2>{error}</h2>
       <Link to="/reset">Forgotten password?</Link>

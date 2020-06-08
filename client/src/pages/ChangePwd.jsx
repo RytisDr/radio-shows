@@ -57,7 +57,9 @@ const ResetPwd = () => {
           type="password"
           placeholder="Repeat the password"
         />
-        <button onClick={(e) => handleClick(e)}>Submit</button>
+        <button className="formBtn" onClick={(e) => handleClick(e)}>
+          Submit
+        </button>
       </form>
       <h2>{response}</h2>
     </>

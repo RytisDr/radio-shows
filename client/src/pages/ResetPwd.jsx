@@ -39,7 +39,9 @@ const ResetPassword = () => {
           placeholder="Your Email"
           onChange={(evt) => setEmail(evt.target.value)}
         />
-        <button onClick={(e) => sendEmail(e)}>Submit</button>
+        <button className="formBtn" onClick={(e) => sendEmail(e)}>
+          Submit
+        </button>
       </form>
       <h2>{response}</h2>
     </>

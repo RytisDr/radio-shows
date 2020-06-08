@@ -31,10 +31,10 @@ const MyShows = () => {
   };
   return (
     <>
-      {error && <h1>Add a Show!</h1>}
+      {error && <h1 id="addH1">Add a Show!</h1>}
       {result &&
         result.map((show) => (
-          <div key={show.id} className="show" id={show.id}>
+          <div key={show.id} className="savedShow" id={show.id}>
             <div className="showLink" onClick={() => goToShow(show.url)}>
               <h2>{show.title}</h2>
             </div>

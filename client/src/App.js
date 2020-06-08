@@ -5,7 +5,6 @@ import authenticate from "./functions/auth";
 import Signup from "./pages/Signup";
 import MyShows from "./pages/MyShows";
 import Login from "./pages/Login";
-import Profile from "./pages/Profile";
 import ResetPwd from "./pages/ResetPwd";
 import ChangePwd from "./pages/ChangePwd";
 import Search from "./pages/Search";
@@ -41,11 +40,6 @@ function App() {
               <Login isAuth={isAuth} setIsAuth={setIsAuth} />
             )}
           ></Route>
-          <PrivateRoute
-            isAuth={isAuth}
-            path="/profile"
-            component={(props) => <Profile />}
-          ></PrivateRoute>
           <PrivateRoute
             isAuth={isAuth}
             path="/my-shows"

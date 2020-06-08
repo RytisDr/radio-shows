@@ -46,11 +46,10 @@ const Signup = () => {
       {signedUp ? (
         <h1>User Created</h1>
       ) : (
-        <div className="container">
-          <h1>Create the profile</h1>
-          <p>.............</p>
+        <div className="formContainer">
+          <h1>Create a Profile</h1>
 
-          <form method="POST">
+          <form className="authForm" method="POST">
             <input
               type="email"
               placeholder="Email"
@@ -72,7 +71,7 @@ const Signup = () => {
               //required
               onChange={(event) => setRepeatPassword(event.target.value)}
             ></input>
-            <button type="submit" onClick={handleClick}>
+            <button className="formBtn" type="submit" onClick={handleClick}>
               CREATE
             </button>
           </form>

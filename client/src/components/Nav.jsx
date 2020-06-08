@@ -10,7 +10,6 @@ const Nav = ({ isAuth, logout }) => {
       {isAuth ? (
         <>
           <NavLink to="/my-shows">My Shows</NavLink>
-          <NavLink to="/profile">Profile</NavLink>
           <a onClick={() => logout()} href="/">
             Logout
           </a>

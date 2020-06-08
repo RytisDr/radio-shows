@@ -1,34 +1,176 @@
+@mixin hover-clickables {
+  :hover {
+    background-color: white;
+    color: black;
+  }
+}
+html {
+  width: calc(100vw);
+  overflow-x: hidden;
+}
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  font-family: -apple-system, BlinkMacSystemFont, "Rubik", "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: black;
   color: white;
+  max-width: 1000px;
+  margin: auto;
+}
+nav {
+  @include hover-clickables();
+  margin-top: 20px;
+  border-bottom: white 2px solid;
+  a {
+    margin: 20px;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    font-size: 20pt;
+    font-family: "Rubik", sans-serif;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 50px;
+    width: 110px;
+    height: 50px;
+  }
+}
+a {
+  font-family: "Rubik", sans-serif;
+  font-style: italic;
+  text-decoration: underline;
+  color: white;
+  font-size: 14pt;
+}
+textarea:focus,
+input:focus {
+  outline: none;
+}
+button,
+input,
+select,
+textarea {
+  font-family: "Rubik", sans-serif;
+  font-weight: 700;
+  font-size: 100%;
+}
+input {
+  height: 38px;
+  text-align: center;
+  font-size: 15pt;
+  border: none;
+  width: 300px;
+}
+button {
+  cursor: pointer;
+  box-sizing: border-box;
+  background-color: black;
+  color: white;
+  border: 1px white solid;
+}
+button:hover {
+  background-color: white;
+  color: black;
+}
+button:focus {
+  outline: none;
+  border-radius: 0;
+}
+#browseAgainBtn {
+  margin: 10px 0px 10px 0px;
+  height: 33px;
+  font-size: 14pt;
+}
+.formBtn {
+  height: 40px;
+  font-size: 16pt;
+  font-weight: 600;
 }
 .show {
   border: white 1px solid;
+  max-width: 300px;
+
   :hover {
     background-color: white;
     color: black;
   }
-  max-width: 300px;
 }
-button {
-  cursor: pointer;
+#showsContainer {
+  justify-items: center;
+  display: grid;
+  gap: 20px 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
+
 .showLink {
   cursor: pointer;
   img {
     max-width: 100%;
   }
+  #showTitle {
+    margin: 0px;
+    padding: 15px;
+  }
+}
+#favoriteBtn {
+  font-size: 14pt;
 }
 #saved:hover {
   background-color: black;
   color: white;
 }
+#saved {
+  margin: 10px;
+}
+#paginationCont {
+  width: 100%;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
+  width: 500px;
+  margin: 20px auto;
+  height: 26px;
+  line-height: 26px;
+  padding: 0;
+  button {
+    font-size: 14pt;
+  }
+  p {
+    text-align: center;
+    margin: 0;
+    font-family: "Rubik", sans-serif;
+    grid-column: 2;
+  }
+}
+.savedShow {
+  border: white 1px solid;
+  max-width: 500px;
+  margin: 20px auto;
+  :hover {
+    background-color: white;
+    color: black;
+  }
+}
+#addH1 {
+  text-align: center;
+}
+
+.authForm {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  width: 300px;
+  margin: auto;
+}
+.formContainer {
+  text-align: center;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

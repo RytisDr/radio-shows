@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import saveShow from "../functions/saveShow";
 const Search = ({ isAuth }) => {
-  const resultPageLimit = 10;
+  const resultPageLimit = 12;
   const initialEndP = () => {
     return `https://api.mixcloud.com/NTSRadio/cloudcasts/?limit=${resultPageLimit}&offset=0`; //Offset allows to browse by result pagination.
   };
@@ -42,6 +42,7 @@ const Search = ({ isAuth }) => {
       });
   }, [endP, initialFetch]);
   useEffect(() => {
+    document.title = "Search For a Show";
     fetchShows();
   }, [fetchShows]);
   const search = (e) => {
@@ -77,56 +78,66 @@ const Search = ({ isAuth }) => {
       <h1>Search for an NTS Show:</h1>
       <form>
         <input
+          placeholder="..."
           type="text"
           onChange={(e) => setSearchQuery(e.target.value)}
         ></input>
-        <button onClick={(e) => search(e)}>Search</button>
+        <button className="formBtn" onClick={(e) => search(e)}>
+          Search
+        </button>
         {emptyQueryErr && <h3>{emptyQueryErr}</h3>}
       </form>
       {initialFetch ? (
         <h1>Browse Most Recently Uploaded NTS Shows:</h1>
       ) : (
         <button
+          id="browseAgainBtn"
           onClick={() => {
             setEndP(initialEndP());
             setInitialFetch(true);
           }}
         >
-          Let Me Browse Again
+          Browse Again
         </button>
       )}
 
       {results ? (
-        <div>
-          {results.data.map((show) => (
-            <div key={show.key} className="show">
-              <div className="showLink" onClick={() => goToShow(show.url)}>
-                <img src={show.pictures.large} alt="" />
-                <h2>{show.name}</h2>
+        <>
+          <div id="showsContainer">
+            {results.data.map((show) => (
+              <div key={show.key} className="show">
+                <div className="showLink" onClick={() => goToShow(show.url)}>
+                  <img src={show.pictures.large} alt="" />
+                  <h2 id="showTitle">{show.name}</h2>
+                </div>
+                {isAuth && (
+                  <button
+                    id="favoriteBtn"
+                    onClick={(e) => saveAShow(show, e.target)}
+                  >
+                    Favorite
+                  </button>
+                )}
+                {showSaved && show.key === showSaved.key && (
+                  <p id="saved">Saved!</p>
+                )}
               </div>
-              {isAuth && (
-                <button onClick={(e) => saveAShow(show, e.target)}>
-                  Favorite
-                </button>
-              )}
-              {showSaved && show.key === showSaved.key && (
-                <p id="saved">Saved!</p>
-              )}
-            </div>
-          ))}
-          <p>Page: {resultsPage}</p>
-
-          {resultsPage > 1 && (
-            <button id="previousPageBtn" onClick={(e) => browse(e)}>
-              Previous page
-            </button>
-          )}
-          {results.paging.next && (
-            <button id="nextPageBtn" onClick={(e) => browse(e)}>
-              Next page
-            </button>
-          )}
-        </div>
+            ))}
+          </div>
+          <div id="paginationCont">
+            {resultsPage > 1 && (
+              <button id="previousPageBtn" onClick={(e) => browse(e)}>
+                Previous page
+              </button>
+            )}
+            <p id="pageNumber">Page: {resultsPage}</p>
+            {results.paging.next && (
+              <button id="nextPageBtn" onClick={(e) => browse(e)}>
+                Next page
+              </button>
+            )}
+          </div>
+        </>
       ) : (
         <h2>{searchError}</h2>
       )}
