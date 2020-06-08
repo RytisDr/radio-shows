@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 9090;
+const port = 80;
 const apiRoutes = require(__dirname + "/routes/api");
 const helmet = require("helmet");
 
@@ -19,12 +19,7 @@ const key = require("./config/keys");
 const domain = require("./config/domain");
 //CORS
 const cors = require("cors");
-app.use(
-  cors({
-    credentials: true,
-    origin: domain.origin,
-  })
-);
+app.use(cors());
 
 app.use(express.urlencoded({ extended: true }));
 // parse application/json
