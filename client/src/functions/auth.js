@@ -14,6 +14,7 @@ export default function authenticate(setIsAuth) {
       }
     })
     .catch((err) => {
+      setIsAuth(false);
       console.log(err);
     });
 }

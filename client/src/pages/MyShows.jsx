@@ -13,7 +13,6 @@ const MyShows = () => {
           setError(res.error);
         } else if (res.response) {
           setResult(res.response);
-          console.log(res.response);
         }
       });
   };
@@ -25,14 +24,17 @@ const MyShows = () => {
   };
   const toRemove = (show, target) => {
     removeShow(show.id);
-    target.parentElement.remove();
+    const filtered = result.filter((elm) => {
+      return elm.id !== show.id;
+    });
+    setResult(filtered);
   };
   return (
     <>
       {error && <h1>Add a Show!</h1>}
       {result &&
         result.map((show) => (
-          <div key={show.id} className="show">
+          <div key={show.id} className="show" id={show.id}>
             <div className="showLink" onClick={() => goToShow(show.url)}>
               <h2>{show.title}</h2>
             </div>

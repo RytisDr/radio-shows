@@ -59,7 +59,6 @@ router.post("/add", isAuthenticated, async (req, res) => {
           });
         return res.status(200).send({ response: "Show Added" });
       } catch (error) {
-        console.log(error);
         return res.status(404).send({ response: "DB error" });
       }
     }
@@ -77,10 +76,14 @@ router.delete("/remove", isAuthenticated, async (req, res) => {
       const showUser = await Shows.query()
         .withGraphFetched("user")
         .findById(showId);
-      console.log(showUser);
-      return res.status(200).send({ response: "Removed" });
+
+      if (showUser.user.id === userId) {
+        await Shows.query().deleteById(showId);
+        return res.status(200).send({ response: "Removed" });
+      }
+      return res.status(401).send({ response: "Unauthorized" });
     } catch (error) {
-      console.log(error);
+      return res.status(404).send({ response: "DB Error" });
     }
   }
   return res.status(404).send({ response: "Wrong data" });
